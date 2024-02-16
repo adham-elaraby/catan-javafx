@@ -6,8 +6,11 @@ import org.jetbrains.annotations.Nullable;
 import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 import projekt.Config;
+import projekt.model.buildings.Port;
 import projekt.model.buildings.Settlement;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,53 +75,148 @@ public class PlayerImpl implements Player {
         return buildingVictoryPoints + developmentCardsVictoryPoints;
     }
 
+    /**
+     * Returns an unmodifiable collection of all the rescoources the player has.
+     * @return unmodifiable map of resources
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public Map<ResourceType, Integer> getResources() {
-        // TODO: H1.1
-        return org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        return Collections.unmodifiableMap(resources);
     }
 
+    /**
+     * Adds the given amount of the given resource to the player.
+     * @param resourceType the type of resource to add
+     * @param amount the amount of the resource to add
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public void addResource(final ResourceType resourceType, final int amount) {
-        // TODO: H1.1
-        org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        // put takes the key and the value
+        // we use getOrDefault to get the current value of the resourceType and add the amount to it
+        // if the resourceType is not in the map, we give it a default value of 0 and add the amount to it
+        resources.put(resourceType, resources.getOrDefault(resourceType, 0) + amount);
     }
 
+    /**
+     * Adds multiple resources to the player.
+     * @param resources a mapping of the to be added resources to their respective amounts
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public void addResources(final Map<ResourceType, Integer> resources) {
-        // TODO: H1.1
-        org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        // goes through the map and adds the resources to the player
+        for (Map.Entry<ResourceType, Integer> entry : resources.entrySet()) {
+            addResource(entry.getKey(), entry.getValue());
+        }
     }
 
+    /**
+     * Returns true if the player has at least the given amount of the resource.
+     * Returns false otherwise.
+     * @param resources a mapping of resources to their amounts to check
+     * @return true if the player has at least the given amount of the resource, false otherwise
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public boolean hasResources(final Map<ResourceType, Integer> resources) {
-        // TODO: H1.1
-        return org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        for (Map.Entry<ResourceType, Integer> entry : resources.entrySet()) {
+            // get the value mapped to the key in the map, if the key is not in the map, we pass 0 forward
+            // if the value is less than the entry value (from the parameter), we return false
+            if (this.resources.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
+                return false; // if the player does not have enough resources, return false
+            }
+        }
+        return true; // player has enough resources
     }
 
+    /**
+     * Removes the given amount of the given resource from the player.
+     * @param resourceType the type of resource to remove
+     * @param amount the amount of the resource to remove
+     * @return true if the player had enough resources to remove, false otherwise
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public boolean removeResource(final ResourceType resourceType, final int amount) {
-        // TODO: H1.1
-        return org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        // get the amount of the resourceType the player has, and check if he has enough
+        int currentAmount = resources.getOrDefault(resourceType, 0);
+        if (currentAmount < amount) {
+            return false;
+        }
+        // overwrite the amount of the resourceType with the new amount
+        resources.put(resourceType, currentAmount - amount);
+        return true;
     }
 
+    /**
+     * Removes the given resources from the player.
+     * @param resources a mapping of the to be removed resources to their respective amounts
+     * @return true if the player had enough resources to remove, false otherwise
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public boolean removeResources(final Map<ResourceType, Integer> resources) {
-        // TODO: H1.1
-        return org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        // compare the resources map passed as parameter with the player's resources
+        if (!hasResources(resources)) {
+            // does not have enough resources
+            return false;
+        }
+        for (Map.Entry<ResourceType, Integer> entry : resources.entrySet()) {
+            removeResource(entry.getKey(), entry.getValue());
+        }
+        return true;
     }
 
+    /**
+     * This is a private helping method for getTradeRatio, that checks if the player has a special port for the given resourceType.
+     * @param resourceType the resourceType to check for, as special port only works for one resourceType
+     * @return true if the player has a special port for the given resourceType, false otherwise
+     */
+    private boolean hasSpecialPort(ResourceType resourceType) {
+        // goes through settlements >> intersections >> ports and checks if the player has a special port for the given resourceType
+        for (Settlement settlement : getSettlements()) {
+            Port port = settlement.intersection().getPort();
+            // check if the port resourceType is the same as the given resourceType and the ratio is 2 (special port)
+            if (port != null && port.resourceType() == resourceType && port.ratio() == 2) {
+                return true; // player has a special port for the given resourceType
+            }
+        }
+        return false; // player does not have a special port for the given resourceType
+    }
+
+    /**
+     * This is a private helping method for getTradeRatio, that checks if the player has a general port.
+     * @return true if the player has a general port, false otherwise
+     */
+    private boolean hasGeneralPort() {
+        // goes through settlements >> intersections >> ports and checks if the player has a general port
+        for (Settlement settlement : getSettlements()) {
+            Port port = settlement.intersection().getPort();
+            // port.resourceType() == null means that the port is a general port and accepts any resourceType
+            if (port != null && port.resourceType() == null && port.ratio() == 3) {
+                return true; // player has a general port
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the ratio the player can trade the given resource for with the bank based on available Ports.
+     * @param resourceType the resource to trade
+     * @return the ratio the player can trade the given resource for with the bank, 4 if no port, 3 if general port, 2 if special port
+     */
     @Override
     @StudentImplementationRequired("H1.1")
     public int getTradeRatio(final ResourceType resourceType) {
-        // TODO: H1.1
-        return org.tudalgo.algoutils.student.Student.crash("H1.1 - Remove if implemented");
+        if (hasSpecialPort(resourceType)) {
+            return 2;
+        } else if (hasGeneralPort()) {
+            return 3;
+        } else {
+            return 4;
+        }
     }
 
     @Override
