@@ -3,7 +3,16 @@
 Beachten Sie die Hinweise zum Herunterladen, Importieren, Bearbeitern, Exportieren und Hochladen in unserem
 [Studierenden-Guide](https://wiki.tudalgo.org/)
 
-# IMPORTANT for our private Repo!
+# Install Github Client
+
+MacOS: `brew install gh`
+
+Login: run `gh auth login` and choose website login
+
+clone the repo, and run the following commands in the directory:
+
+
+# !IMPORTANT! for our private Repo!
 
 - Add the public repo as public
 `git remote add public https://github.com/FOP-2324/FOP-2324-Projekt-Student.git`
