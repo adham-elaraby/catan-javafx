@@ -86,14 +86,35 @@ public class IntersectionImpl implements Intersection {
     @StudentImplementationRequired("H1.4")
     public boolean placeVillage(final Player player, final boolean ignoreRoadCheck) {
         // TODO: H1.4
-        return org.tudalgo.algoutils.student.Student.crash("H1.4 - Remove if implemented");
+        // Check if the intersection is already occupied by a settlement.
+        if (this.settlement != null) {
+            return false;
+        }
+        // If we are not ignoring the road check, ensure that the player has a connected road.
+        if (!ignoreRoadCheck && !playerHasConnectedRoad(player)) {
+            return false;
+        }
+        // If the intersection is not occupied and (if required) there is a connected road,
+        // place a village for the player.
+        this.settlement = new Settlement(player, Settlement.Type.VILLAGE, this);
+        return true;
     }
 
     @Override
     @StudentImplementationRequired("H1.4")
     public boolean upgradeSettlement(final Player player) {
         // TODO: H1.4
-        return org.tudalgo.algoutils.student.Student.crash("H1.4 - Remove if implemented");
+        // Check if there is a settlement and if it's owned by the player.
+        if (this.settlement != null && this.settlement.owner().equals(player)) {
+            // Check if the settlement is already a city, which cannot be upgraded further.
+            if (this.settlement.type() == Settlement.Type.CITY) {
+                return false;
+            }
+            // Upgrade the village to a city.
+            this.settlement = new Settlement(player, Settlement.Type.CITY, this);
+            return true;
+        }
+        return false; // No settlement to upgrade or not owned by the player.
     }
 
     @Override
