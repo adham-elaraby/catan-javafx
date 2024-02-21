@@ -82,10 +82,18 @@ public class IntersectionImpl implements Intersection {
         return settlement != null && settlement.owner().equals(player);
     }
 
+    /**
+     * Places a village for the given player at this intersection if it is not already occupied.
+     * The player must have a connected road if the ignoreRoadCheck parameter is false, otherwise the village cannot be placed.
+     *
+     * @param player          the player
+     * @param ignoreRoadCheck if true, the connected road check is ignored
+     * @return true if and only if the village was placed
+     */
     @Override
     @StudentImplementationRequired("H1.4")
     public boolean placeVillage(final Player player, final boolean ignoreRoadCheck) {
-        // TODO: H1.4
+        // H1.4
         // Check if the intersection is already occupied by a settlement.
         if (this.settlement != null) {
             return false;
@@ -100,10 +108,16 @@ public class IntersectionImpl implements Intersection {
         return true;
     }
 
+    /**
+     * Upgrades the settlement at this intersection to a city if it is owned by the given player and is a village.
+     *
+     * @param player the player
+     * @return true if and only if the settlement was upgraded
+     */
     @Override
     @StudentImplementationRequired("H1.4")
     public boolean upgradeSettlement(final Player player) {
-        // TODO: H1.4
+        // H1.4
         // Check if there is a settlement and if it's owned by the player.
         if (this.settlement != null && this.settlement.owner().equals(player)) {
             // Check if the settlement is already a city, which cannot be upgraded further.
