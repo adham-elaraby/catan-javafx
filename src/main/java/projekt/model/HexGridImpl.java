@@ -218,10 +218,15 @@ public class HexGridImpl implements HexGrid {
         return edges.get(Set.of(position0, position1));
     }
 
+    /**
+     * Returns all roads of a player.
+     * @param player the player to get the roads of
+     * @return a map of all roads of the player
+     */
     @Override
     @StudentImplementationRequired("H1.3")
     public Map<Set<TilePosition>, Edge> getRoads(final Player player) {
-        // TODO: H1.3
+        // H1.3
         return edges.entrySet().stream()
             .filter(entry -> entry.getValue().getRoadOwner().equals(player))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -233,37 +238,44 @@ public class HexGridImpl implements HexGrid {
         throw new UnsupportedOperationException("Unimplemented method 'getLongestRoad'");
     }
 
+    /**
+     * Adds a new road to the grid between the two specified positions, if there is no road between them yet, and the player has an adjacent road.
+     *
+     * @param position0     position of the first end of the new road
+     * @param position1     position of the second end of the new road
+     * @param player        owner of the new road
+     * @param checkVillages whether to check if the player has an adjacent village
+     * @return true if the road was added, false if it was not
+     */
     @Override
     @StudentImplementationRequired("H1.3")
     public boolean addRoad(
         final TilePosition position0, final TilePosition position1, final Player player,
         final boolean checkVillages
     ) {
-        // TODO: H1.3
+        // H1.3
         Set<TilePosition> roadKey = Set.of(position0, position1);
         // Check if the road already exists
         if (edges.containsKey(roadKey)) {
             return false; // A road already exists between these positions
         }
         // Check if the player has an adjacent road if checkVillages is false
+        boolean hasAdjacentRoad;// No adjacent road, cannot build
         if (!checkVillages) {
-            boolean hasAdjacentRoad = edges.entrySet().stream().anyMatch(entry -> {
+            hasAdjacentRoad = edges.entrySet().stream().anyMatch(entry -> {
                 // The edge is adjacent if it shares a TilePosition with the roadKey and the owner is the player
                 Set<TilePosition> key = entry.getKey();
                 return (key.contains(position0) || key.contains(position1)) &&
-                    entry.getValue().getRoadOwner().equals(player);
+                        entry.getValue().getRoadOwner().equals(player);
             });
 
-            if (!hasAdjacentRoad) {
-                return false; // No adjacent road owned by the player
-            }
         } else {
-            boolean hasAdjacentRoad = edges.values().stream().anyMatch(edge ->
-                edge.getRoadOwner().equals(player) && (edge.getAdjacentTilePositions().contains(position0) || edge.getAdjacentTilePositions().contains(position1))
+            hasAdjacentRoad = edges.values().stream().anyMatch(edge ->
+                    edge.getRoadOwner().equals(player) && (edge.getAdjacentTilePositions().contains(position0) || edge.getAdjacentTilePositions().contains(position1))
             );
-            if (!hasAdjacentRoad) {
-                return false; // No adjacent road, cannot build
-            }
+        }
+        if (!hasAdjacentRoad) {
+            return false; // No adjacent road owned by the player
         }
         // If the method reaches here, it means the player can build a road
         Edge newRoad = new EdgeImpl(this, position0, position1, new SimpleObjectProperty<>(player), null);

@@ -47,10 +47,15 @@ public record EdgeImpl(
         return port;
     }
 
+    /**
+     * Returns whether this edge connects to another edge.
+     * @param other the other edge
+     * @return true if and only if the two edges are connected via a common intersection
+     */
     @Override
     @StudentImplementationRequired("H1.3")
     public boolean connectsTo(final Edge other) {
-        // TODO: H1.3
+        // H1.3
         Set<Intersection> thisIntersections = getIntersections();
         // Get intersections connected by the other edge
         Set<Intersection> otherIntersections = other.getIntersections();
@@ -58,10 +63,14 @@ public record EdgeImpl(
         return thisIntersections.stream().anyMatch(otherIntersections::contains);
     }
 
+    /**
+     * Returns the intersections connected by this edge.
+     * @return the set of intersections connected by this edge
+     */
     @Override
     @StudentImplementationRequired("H1.3")
     public Set<Intersection> getIntersections() {
-        // TODO: H1.3
+        // H1.3
         return grid.getIntersections().values().stream()
             .filter(intersection -> intersection.getAdjacentTilePositions().containsAll(Set.of(position1, position2)))
             .collect(Collectors.toSet());
@@ -72,10 +81,15 @@ public record EdgeImpl(
         return roadOwner;
     }
 
+    /**
+     * Returns the set of edges connected to this edge that are owned by the given player
+     * @param player the player to check for
+     * @return the set of edges connected to this edge that are owned by the given player
+     */
     @Override
     @StudentImplementationRequired("H1.3")
     public Set<Edge> getConnectedRoads(final Player player) {
-        // TODO: H1.3
+        // H1.3
         // Get intersections connected by this edge
         Set<Intersection> intersections = getIntersections();
         // Find all edges that are connected to the intersections of this edge and are owned by the player
