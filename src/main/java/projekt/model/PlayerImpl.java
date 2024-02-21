@@ -240,39 +240,79 @@ public class PlayerImpl implements Player {
         );
     }
 
+    /**
+     * Returns an unmodifiable collection of all the Development Cards the player has.
+     * @return unmodifiable collection of the development cards
+     */
     @Override
     @StudentImplementationRequired("H1.2")
     public Map<DevelopmentCardType, Integer> getDevelopmentCards() {
-        // TODO: H1.2
-        return org.tudalgo.algoutils.student.Student.crash("H1.2 - Remove if implemented");
+        // H1.2
+        return Collections.unmodifiableMap(developmentCards);
     }
 
+    /**
+     * Adds a development card to the player, with the given type.
+     * @param developmentCardType the type of the development card to add
+     */
     @Override
     @StudentImplementationRequired("H1.2")
     public void addDevelopmentCard(final DevelopmentCardType developmentCardType) {
-        // TODO: H1.2
-        org.tudalgo.algoutils.student.Student.crash("H1.2 - Remove if implemented");
+        // H1.2
+        // put takes the key and the value
+        // we use getOrDefault to get the current value of the developmentCardType and add 1 to it
+        // or if the developmentCardType is not in the map, we give it a default value of 0 and add 1 to it
+        developmentCards.put(developmentCardType, developmentCards.getOrDefault(developmentCardType, 0) + 1);
     }
 
+    /**
+     * Removes a development card from the player, with the given type, if the player has at least 1 of the given type.
+     * @param developmentCardType the development card to remove
+     * @return true if it was successfully removed, false otherwise
+     */
     @Override
     @StudentImplementationRequired("H1.2")
     public boolean removeDevelopmentCard(final DevelopmentCardType developmentCardType) {
-        // TODO: H1.2
-        return org.tudalgo.algoutils.student.Student.crash("H1.2 - Remove if implemented");
+        // H1.2
+        // get the amount of the developmentCardType the player has, and check if he has at least 1
+        int currentAmount = developmentCards.getOrDefault(developmentCardType, 0);
+        if (currentAmount < 1) {
+            // player does not have the developmentCardType
+            return false;
+        }
+        // overwrite the amount of the developmentCardType with the new amount
+        developmentCards.put(developmentCardType, currentAmount - 1);
+        // add the developmentCardType to the playedDevelopmentCards, so we can keep track of the played development cards
+        playedDevelopmentCards.put(developmentCardType, playedDevelopmentCards.getOrDefault(developmentCardType, 0) + 1);
+        return true;
     }
 
+    /**
+     * Returns the total amount of all development cards the player has.
+     * @return the amount of all development cards the player has
+     */
     @Override
     @StudentImplementationRequired("H1.2")
     public int getTotalDevelopmentCards() {
-        // TODO: H1.2
-        return org.tudalgo.algoutils.student.Student.crash("H1.2 - Remove if implemented");
+        // H1.2
+        // Loop through the developmentCards and sum the amounts
+        int total = 0;
+        // HashMap.values() returns a Collection of the values in the map
+        for (Integer amount : developmentCards.values()) {
+            total += amount;
+        }
+        return total;
     }
 
+    /**
+     * Returns the amount of played development cards of type KNIGHT
+     * @return the amount of Knights played
+     */
     @Override
     @StudentImplementationRequired("H1.2")
     public int getKnightsPlayed() {
-        // TODO: H1.2
-        return org.tudalgo.algoutils.student.Student.crash("H1.2 - Remove if implemented");
+        // H1.2
+        return playedDevelopmentCards.getOrDefault(DevelopmentCardType.KNIGHT, 0);
     }
 
     /**
