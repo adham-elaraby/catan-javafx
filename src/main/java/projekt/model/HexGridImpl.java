@@ -227,9 +227,19 @@ public class HexGridImpl implements HexGrid {
     @StudentImplementationRequired("H1.3")
     public Map<Set<TilePosition>, Edge> getRoads(final Player player) {
         // H1.3
-        return edges.entrySet().stream()
-            .filter(entry -> entry.getValue().getRoadOwner().equals(player))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Set<Edge> playerEdges = new HashSet<>();
+
+        // Iterate through the entrySet of the edges map.
+        for (Map.Entry<Set<TilePosition>, Edge> edgeEntry : edges.entrySet()) {
+            // Check if the edge is owned by the player.
+            if (edgeEntry.getValue().getRoadOwner().equals(player)) {
+                // If so, add the edge to the playerEdges set.
+                playerEdges.add(edgeEntry.getValue());
+            }
+        }
+
+        // Return the set of edges owned by the player.
+        return (Map<Set<TilePosition>, Edge>) playerEdges;
     }
 
     @Override
@@ -270,9 +280,10 @@ public class HexGridImpl implements HexGrid {
             });
 
         } else {
-            hasAdjacentRoad = edges.values().stream().anyMatch(edge ->
-                    edge.getRoadOwner().equals(player) && (edge.getAdjacentTilePositions().contains(position0) || edge.getAdjacentTilePositions().contains(position1))
-            );
+            hasAdjacentRoad = edges.entrySet().stream().anyMatch(entry -> {
+                Set<TilePosition> key = entry.getKey();
+                return (key.contains(position0) || key.contains(position1)) && entry.getValue().getRoadOwner().equals(player);
+            });
         }
         if (!hasAdjacentRoad) {
             return false; // No adjacent road owned by the player

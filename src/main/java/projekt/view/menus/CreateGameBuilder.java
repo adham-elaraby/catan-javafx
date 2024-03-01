@@ -3,11 +3,10 @@ package projekt.view.menus;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 import projekt.model.PlayerImpl;
@@ -100,7 +99,12 @@ public class CreateGameBuilder extends MenuBuilder {
     @StudentImplementationRequired("H3.4")
     private Node createAddPlayerButton() {
         // TODO: H3.4
-        return org.tudalgo.algoutils.student.Student.crash("H3.4 - Remove if implemented");
+        Button addPlayerButton = new Button("Add Player");
+        addPlayerButton.setOnAction(e -> {
+            PlayerImpl.Builder newPlayerBuilder = nextPlayerBuilder();
+            observablePlayers.add(newPlayerBuilder);
+        });
+        return addPlayerButton;
     }
 
     /**
@@ -114,7 +118,21 @@ public class CreateGameBuilder extends MenuBuilder {
     @StudentImplementationRequired("H3.4")
     private Node createPlayerColorPicker(final Builder playerBuilder) {
         // TODO: H3.4
-        return org.tudalgo.algoutils.student.Student.crash("H3.4 - Remove if implemented");
+        ColorPicker colorPicker = new ColorPicker();
+        colorPicker.setOnAction(e -> {
+            Color newColor = colorPicker.getValue();
+            boolean colorExists = observablePlayers.stream()
+                .anyMatch(otherPlayerBuilder -> otherPlayerBuilder.getColor() == newColor);
+            if (colorExists) {
+                // Handle the case where the color is already in use
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("This color is already taken by another player!");
+                alert.show();
+            } else {
+                playerBuilder.color(newColor);
+            }
+        });
+        return colorPicker;
     }
 
     /**
@@ -126,7 +144,10 @@ public class CreateGameBuilder extends MenuBuilder {
     @StudentImplementationRequired("H3.4")
     private Node createBotOrPlayerSelector(final Builder playerBuilder) {
         // TODO: H3.4
-        return org.tudalgo.algoutils.student.Student.crash("H3.4 - Remove if implemented");
+        CheckBox botCheckBox = new CheckBox("Is AI?");
+        botCheckBox.setSelected(playerBuilder.isAi());
+        botCheckBox.setOnAction(e -> playerBuilder.ai(botCheckBox.isSelected()));
+        return botCheckBox;
     }
 
     /**
@@ -138,7 +159,9 @@ public class CreateGameBuilder extends MenuBuilder {
     @StudentImplementationRequired("H3.4")
     private Button createRemovePlayerButton(final int id) {
         // TODO: H3.4
-        return org.tudalgo.algoutils.student.Student.crash("H3.4 - Remove if implemented");
+        Button removePlayerButton = new Button("Remove Player");
+        removePlayerButton.setOnAction(e -> removePlayer(id));
+        return removePlayerButton;
     }
 
     /**
@@ -150,7 +173,11 @@ public class CreateGameBuilder extends MenuBuilder {
     @StudentImplementationRequired("H3.4")
     private void removePlayer(final int id) {
         // TODO: H3.4
-        org.tudalgo.algoutils.student.Student.crash("H3.4 - Remove if implemented");
+        observablePlayers.removeIf(playerBuilder -> playerBuilder.getId() == id);
+        int newId = 1;
+        for (PlayerImpl.Builder playerBuilder : observablePlayers) {
+            playerBuilder.id(newId++);
+        }
     }
 
     /**
