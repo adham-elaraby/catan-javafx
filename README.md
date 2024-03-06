@@ -36,6 +36,20 @@ To Push your commits to private
 (Only for Adham) To Pull any changes from public
 `git pull public main`
 
+# Increase Memory to be able to Run the gradle task `verification\check`
+
+## End the task, i.e. make intellij stop running then:
+run: `./gradlew --stop` in intellij terminal.
+
+## Java mehr Speicher zuweisen
+Gehen Sie in Ihrem User Ordner in der Ordner ".gradle"
+Unter Windows finden Sie den Ordner unter `"C:\Users\<UserName>\.gradle"` und auf Linux und macOS unter `"~/.gradle"`
+Falls nicht vorhanden, erstellen Sie die Datei `"gradle.properties"`.
+Fügen Sie in dieser Datei eine Zeile mit folgendem Eintrag hinzu:
+
+`org.gradle.jvmargs=-Xmx4096M`
+Sie können auch versuchen die Zahl am Ende zu erhöhen, wenn der Fehler weiterhin auftritt.
+
 # Setup! DO NOT SKIP
 ## Install GitHub Client
 
