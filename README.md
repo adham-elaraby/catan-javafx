@@ -46,13 +46,11 @@ To Push your commits to private
 
 Then clone the repo, and run the following commands in the directory:
 
-
-### IMPORTANT! DO NOT SKIP
-
-- Make git not change `build.gradle.kts` because we all have different tu-id's
-`git update-index --assume-unchanged build.gradle.kts`
-
 ### Optional, you don't need to run the next command (Adham will handle this)
 - Add the public repo as public
 `git remote add public https://github.com/FOP-2324/FOP-2324-Projekt-Student.git`
+
+### Old instructions don't follow:
+- Make git not change `build.gradle.kts` because we all have different tu-id's
+`git update-index --assume-unchanged build.gradle.kts`
 
