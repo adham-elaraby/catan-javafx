@@ -227,19 +227,21 @@ public class HexGridImpl implements HexGrid {
     @StudentImplementationRequired("H1.3")
     public Map<Set<TilePosition>, Edge> getRoads(final Player player) {
         // H1.3
-        Set<Edge> playerEdges = new HashSet<>();
+        Map<Set<TilePosition>, Edge> playerEdges = new HashMap<>();
 
         // Iterate through the entrySet of the edges map.
         for (Map.Entry<Set<TilePosition>, Edge> edgeEntry : edges.entrySet()) {
             // Check if the edge is owned by the player.
-            if (edgeEntry.getValue().getRoadOwner().equals(player)) {
-                // If so, add the edge to the playerEdges set.
-                playerEdges.add(edgeEntry.getValue());
+            Player roadOwner = edgeEntry.getValue().getRoadOwner();
+            if (roadOwner != null && roadOwner.equals(player)) {
+                // If so, add the edge to the playerEdges map.
+                playerEdges.put(edgeEntry.getKey(), edgeEntry.getValue());
             }
         }
 
-        // Return the set of edges owned by the player.
-        return (Map<Set<TilePosition>, Edge>) playerEdges;
+        // Return the map of edges owned by the player.
+        return playerEdges;
+
     }
 
     @Override
