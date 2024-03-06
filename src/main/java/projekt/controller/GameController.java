@@ -7,6 +7,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 import projekt.Config;
+import projekt.controller.actions.AcceptTradeAction;
+import projekt.controller.actions.PlayerAction;
 import projekt.model.*;
 import projekt.model.buildings.Settlement;
 import projekt.model.tiles.Tile;
@@ -320,8 +322,38 @@ public class GameController {
         final Player offeringPlayer, final Map<ResourceType, Integer> offer,
         final Map<ResourceType, Integer> request
     ) {
-        // TODO: H2.3
-        org.tudalgo.algoutils.student.Student.crash("H2.3 - Remove if implemented");
+        // Iterate over all players
+        for (PlayerController playerController : playerControllers.values()) {
+            Player player = playerController.getPlayer();
+
+            // Check if the player can accept the trade
+            if (playerController.canAcceptTradeOffer(offeringPlayer, request)) {
+                // Set the trade offer for the player
+                playerController.setPlayerTradeOffer(offeringPlayer, offer, request);
+
+                // Wait for the player's action
+                PlayerAction action = playerController.waitForNextAction(PlayerObjective.ACCEPT_TRADE);
+
+                // Check if the action is an instance of AcceptTradeAction
+                if (action instanceof AcceptTradeAction) {
+                    // Get the accepted status from the record
+                    boolean accepted = ((AcceptTradeAction) action).accepted();
+
+                    // If the trade is accepted, execute the trade....
+                    if (accepted) {
+                        offeringPlayer.removeResources(offer);
+                        player.addResources(offer);
+                        player.removeResources(request);
+                        offeringPlayer.addResources(request);
+                    }
+                    // Set the player's objective to IDLE after processing the action
+                    playerController.setPlayerObjective(PlayerObjective.IDLE);
+                }
+
+                // Reset the trade offer for the player
+                playerController.resetPlayerTradeOffer();
+            }
+        }
     }
 
     /**
