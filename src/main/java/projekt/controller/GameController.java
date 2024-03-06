@@ -296,10 +296,13 @@ public class GameController {
      */
     @StudentImplementationRequired("H2.1")
     private void firstRound() {
-        for (Player player : state.getPlayers()) {
-            activePlayerControllerProperty.setValue(playerControllers.get(player));
-            playerControllers.get(player).waitForNextAction(PlayerObjective.PLACE_VILLAGE);
-            playerControllers.get(player).waitForNextAction(PlayerObjective.PLACE_ROAD);
+        for (int i = 0; i < 2; i++) {
+            for (Player player : state.getPlayers()) {
+                activePlayerControllerProperty.setValue(playerControllers.get(player));
+                playerControllers.get(player).waitForNextAction(PlayerObjective.PLACE_VILLAGE);
+                playerControllers.get(player).waitForNextAction(PlayerObjective.PLACE_ROAD);
+                playerControllers.get(player).setPlayerObjective(PlayerObjective.IDLE);
+            }
         }
         activePlayerControllerProperty.setValue(null);
     }
