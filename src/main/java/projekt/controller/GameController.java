@@ -333,16 +333,20 @@ public class GameController {
      */
     @StudentImplementationRequired("H2.1")
     private void diceRollSeven() {
+        Player originalActivePlayer = getActivePlayerController().getPlayer();
+
         for (Player player : state.getPlayers()) {
             int totalResources = player.getResources().values().stream().mapToInt(Integer::intValue).sum();
 
             if (totalResources > 7) {
                 activePlayerControllerProperty.setValue(playerControllers.get(player));
+                playerControllers.get(player).setCardsToSelect(totalResources / 2);
                 playerControllers.get(player).waitForNextAction(PlayerObjective.DROP_CARDS);
+                playerControllers.get(player).setPlayerObjective(PlayerObjective.IDLE);
             }
         }
 
-        setActivePlayerControllerProperty(getActivePlayerController().getPlayer());
+        setActivePlayerControllerProperty(originalActivePlayer);
         getActivePlayerController().waitForNextAction(PlayerObjective.SELECT_ROBBER_TILE);
         getActivePlayerController().waitForNextAction(PlayerObjective.SELECT_CARD_TO_STEAL);
     }
