@@ -11,6 +11,7 @@ import projekt.Config;
 import projekt.model.buildings.Edge;
 import projekt.model.buildings.EdgeImpl;
 import projekt.model.buildings.Port;
+import projekt.model.buildings.Settlement;
 import projekt.model.tiles.Tile;
 import projekt.model.tiles.TileImpl;
 
@@ -265,36 +266,34 @@ public class HexGridImpl implements HexGrid {
         final TilePosition position0, final TilePosition position1, final Player player,
         final boolean checkVillages
     ) {
-        // H1.3
-        Set<TilePosition> roadKey = Set.of(position0, position1);
-        // Check if the road already exists
-        if (edges.containsKey(roadKey)) {
-            return false; // A road already exists between these positions
-        }
-        // Check if the player has an adjacent road if checkVillages is false
-        boolean hasAdjacentRoad;// No adjacent road, cannot build
-        if (!checkVillages) {
-            hasAdjacentRoad = edges.entrySet().stream().anyMatch(entry -> {
-                // The edge is adjacent if it shares a TilePosition with the roadKey and the owner is the player
-                Set<TilePosition> key = entry.getKey();
-                return (key.contains(position0) || key.contains(position1)) &&
-                        entry.getValue().getRoadOwner().equals(player);
-            });
+        Edge edge = getEdge(position0, position1);
 
+        // Check if a road already exists
+        if (edge.getRoadOwner() != null) {
+            return false;
+        }
+
+        if (checkVillages) {
+            // Check if the player owns a village adjacent to the edge
+            for (Intersection intersection : edge.getIntersections()) {
+                if (intersection.getSettlement() != null && intersection.getSettlement().owner().equals(player)) {
+                    edge.getRoadOwnerProperty().setValue(player);
+                    return true;
+                }
+            }
         } else {
-            hasAdjacentRoad = edges.entrySet().stream().anyMatch(entry -> {
-                Set<TilePosition> key = entry.getKey();
-                return (key.contains(position0) || key.contains(position1)) && entry.getValue().getRoadOwner().equals(player);
-            });
+            // Check if the player owns a road adjacent to the edge
+            for (Intersection intersection : edge.getIntersections()) {
+                for (Edge adjacentEdge : intersection.getConnectedEdges()) {
+                    if (adjacentEdge.getRoadOwner() != null && adjacentEdge.getRoadOwner().equals(player)) {
+                        edge.getRoadOwnerProperty().setValue(player);
+                        return true;
+                    }
+                }
+            }
         }
-        if (!hasAdjacentRoad) {
-            return false; // No adjacent road owned by the player
-        }
-        // If the method reaches here, it means the player can build a road
-        Edge newRoad = new EdgeImpl(this, position0, position1, new SimpleObjectProperty<>(player), null);
-        edges.put(roadKey, newRoad);
 
-        return true;
+        return false;
     }
 
     @Override
