@@ -47,7 +47,7 @@ Unter Windows finden Sie den Ordner unter `"C:\Users\<UserName>\.gradle"` und au
 Falls nicht vorhanden, erstellen Sie die Datei `"gradle.properties"`.
 Fügen Sie in dieser Datei eine Zeile mit folgendem Eintrag hinzu:
 
-`org.gradle.jvmargs=-Xmx4096M`
+`org.gradle.jvmargs=-Xmx8192M`
 Sie können auch versuchen die Zahl am Ende zu erhöhen, wenn der Fehler weiterhin auftritt.
 
 # Setup! DO NOT SKIP
