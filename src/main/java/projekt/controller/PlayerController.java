@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  * to trigger any allowed actions. It then executes the actions and updates the
  * player's state.
  */
-public class PlayerController {
+public class    PlayerController {
     private final Player player;
 
     private final GameController gameController;
@@ -335,8 +335,9 @@ public class PlayerController {
      */
     @StudentImplementationRequired("H2.4")
     public boolean canBuildVillage() {
-        // TODO: H2.4
-        return org.tudalgo.algoutils.student.Student.crash("H2.4 - Remove if implemented");
+        return playerObjectiveProperty.getValue() == PlayerObjective.PLACE_VILLAGE
+            && player.hasResources(Config.SETTLEMENT_BUILDING_COST.get(Settlement.Type.VILLAGE))
+            && player.getRemainingVillages() > 0;
     }
 
     /**
@@ -351,8 +352,10 @@ public class PlayerController {
      */
     @StudentImplementationRequired("H2.4")
     public void buildVillage(final Intersection intersection) throws IllegalActionException {
-        // TODO: H2.4
-        org.tudalgo.algoutils.student.Student.crash("H2.4 - Remove if implemented");
+        if (!canBuildVillage()) throw new IllegalActionException("Cannot build Village.");
+        if(!intersection.placeVillage(player, !isFirstRound())) throw new IllegalActionException("Cannot build the Village");
+        if (playerObjectiveProperty.getValue() != PlayerObjective.PLACE_VILLAGE)
+            player.removeResources(Config.SETTLEMENT_BUILDING_COST.get(Settlement.Type.VILLAGE));
     }
 
     /**
@@ -394,8 +397,9 @@ public class PlayerController {
      */
     @StudentImplementationRequired("H2.5")
     public void upgradeVillage(final Intersection intersection) throws IllegalActionException {
-        // TODO: H2.5
-        org.tudalgo.algoutils.student.Student.crash("H2.5 - Remove if implemented");
+        if (!canUpgradeVillage()) throw new IllegalActionException("Cannot upgrade village");
+        if(!intersection.upgradeSettlement(player)) throw new IllegalActionException("Cannot upgrade village");
+        player.removeResources(Config.SETTLEMENT_BUILDING_COST.get(Settlement.Type.CITY));
     }
 
     /**
@@ -435,8 +439,9 @@ public class PlayerController {
      */
     @StudentImplementationRequired("H2.4")
     public boolean canBuildRoad() {
-        // TODO: H2.4
-        return org.tudalgo.algoutils.student.Student.crash("H2.4 - Remove if implemented");
+        return player.hasResources(Config.ROAD_BUILDING_COST)
+            && playerObjectiveProperty.getValue() == PlayerObjective.PLACE_ROAD
+            && player.getRemainingRoads() > 0;
     }
 
     /**
@@ -465,8 +470,11 @@ public class PlayerController {
      */
     @StudentImplementationRequired("H2.4")
     public void buildRoad(final TilePosition position0, final TilePosition position1) throws IllegalActionException {
-        // TODO: H2.4
-        org.tudalgo.algoutils.student.Student.crash("H2.4 - Remove if implemented");
+        if (!canBuildRoad()) throw new IllegalActionException("Cannot build road");
+        if (!player.getHexGrid().addRoad(position0, position1, player, isFirstRound()))
+            throw new IllegalActionException("Cannot build road");
+        if (playerObjectiveProperty.getValue() != PlayerObjective.PLACE_ROAD)
+            player.removeResources(Config.ROAD_BUILDING_COST);
     }
 
     // Development card methods

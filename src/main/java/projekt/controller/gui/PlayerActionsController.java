@@ -12,20 +12,9 @@ import org.tudalgo.algoutils.student.annotation.DoNotTouch;
 import org.tudalgo.algoutils.student.annotation.StudentImplementationRequired;
 import projekt.controller.PlayerController;
 import projekt.controller.PlayerObjective;
-import projekt.controller.actions.AcceptTradeAction;
-import projekt.controller.actions.BuyDevelopmentCardAction;
-import projekt.controller.actions.EndTurnAction;
-import projekt.controller.actions.PlayDevelopmentCardAction;
-import projekt.controller.actions.RollDiceAction;
-import projekt.controller.actions.SelectCardsAction;
-import projekt.controller.actions.SelectRobberTileAction;
-import projekt.controller.actions.StealCardAction;
-import projekt.controller.actions.TradeAction;
-import projekt.model.DevelopmentCardType;
-import projekt.model.Player;
-import projekt.model.PlayerState;
-import projekt.model.ResourceType;
-import projekt.model.TradePayload;
+import projekt.controller.actions.*;
+import projekt.model.*;
+import projekt.model.buildings.Edge;
 import projekt.model.tiles.Tile;
 import projekt.view.gameControls.AcceptTradeDialog;
 import projekt.view.gameControls.PlayerActionsBuilder;
@@ -273,8 +262,9 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.1")
     private void updateBuildVillageButtonState() {
-        // TODO: H3.1
-        org.tudalgo.algoutils.student.Student.crash("H3.1 - Remove if implemented");
+        if (getPlayerObjective().getAllowedActions().contains(BuildVillageAction.class) && !playerStateProperty.getValue().buildableVillageIntersections().isEmpty()) {
+            builder.enableBuildVillageButton();
+        } else builder.disableBuildVillageButton();
     }
 
     /**
@@ -290,8 +280,10 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.1")
     private void buildVillageButtonAction(final ActionEvent event) {
-        // TODO: H3.1
-        org.tudalgo.algoutils.student.Student.crash("H3.1 - Remove if implemented");
+        for (Intersection intersection : playerStateProperty.getValue().buildableVillageIntersections())
+            gameBoardController.getHexGridController().getIntersectionControllersMap().get(intersection).highlight(
+                buildActionWrapper(Event -> playerControllerProperty.getValue().triggerAction(new BuildVillageAction(intersection)))
+            );
     }
 
     /**
@@ -300,8 +292,9 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.1")
     private void updateUpgradeVillageButtonState() {
-        // TODO: H3.1
-        org.tudalgo.algoutils.student.Student.crash("H3.1 - Remove if implemented");
+        if (getPlayerObjective().getAllowedActions().contains(UpgradeVillageAction.class) && !playerStateProperty.getValue().upgradableVillageIntersections().isEmpty()) {
+            builder.enableBuildVillageButton();
+        } else builder.disableBuildVillageButton();
     }
 
     /**
@@ -317,8 +310,10 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.1")
     private void upgradeVillageButtonAction(final ActionEvent event) {
-        // TODO: H3.1
-        org.tudalgo.algoutils.student.Student.crash("H3.1 - Remove if implemented");
+        for (Intersection intersection : playerStateProperty.getValue().upgradableVillageIntersections())
+            gameBoardController.getHexGridController().getIntersectionControllersMap().get(intersection).highlight(
+                buildActionWrapper(Event -> playerControllerProperty.getValue().triggerAction(new UpgradeVillageAction(intersection)))
+            );
     }
 
     /**
@@ -327,8 +322,9 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.1")
     private void updateBuildRoadButtonState() {
-        // TODO: H3.1
-        org.tudalgo.algoutils.student.Student.crash("H3.1 - Remove if implemented");
+        if (getPlayerObjective().getAllowedActions().contains(BuildRoadAction.class) && !playerStateProperty.getValue().buildableRoadEdges().isEmpty()) {
+            builder.enableBuildVillageButton();
+        } else builder.disableBuildVillageButton();
     }
 
     /**
@@ -344,8 +340,10 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.1")
     private void buildRoadButtonAction(final ActionEvent event) {
-        // TODO: H3.1
-        org.tudalgo.algoutils.student.Student.crash("H3.1 - Remove if implemented");
+        for (Edge edge : playerStateProperty.getValue().buildableRoadEdges())
+            gameBoardController.getHexGridController().getEdgeControllersMap().get(edge).highlight(
+                buildActionWrapper(e -> playerControllerProperty.getValue().triggerAction(new BuildRoadAction(edge)))
+            );
     }
 
     /**
