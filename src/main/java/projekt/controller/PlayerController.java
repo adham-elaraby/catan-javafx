@@ -335,8 +335,8 @@ public class    PlayerController {
      */
     @StudentImplementationRequired("H2.4")
     public boolean canBuildVillage() {
-        return playerObjectiveProperty.getValue() == PlayerObjective.PLACE_VILLAGE
-            && player.hasResources(Config.SETTLEMENT_BUILDING_COST.get(Settlement.Type.VILLAGE))
+        return (playerObjectiveProperty.getValue() == PlayerObjective.PLACE_VILLAGE
+            || player.hasResources(Config.SETTLEMENT_BUILDING_COST.get(Settlement.Type.VILLAGE)))
             && player.getRemainingVillages() > 0;
     }
 
@@ -439,8 +439,8 @@ public class    PlayerController {
      */
     @StudentImplementationRequired("H2.4")
     public boolean canBuildRoad() {
-        return player.hasResources(Config.ROAD_BUILDING_COST)
-            && playerObjectiveProperty.getValue() == PlayerObjective.PLACE_ROAD
+        return (player.hasResources(Config.ROAD_BUILDING_COST)
+            || playerObjectiveProperty.getValue() == PlayerObjective.PLACE_ROAD)
             && player.getRemainingRoads() > 0;
     }
 
