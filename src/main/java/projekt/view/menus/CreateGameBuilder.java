@@ -66,12 +66,29 @@ public class CreateGameBuilder extends MenuBuilder {
                         playerBuilder.name(newName);
                     }
                 });
+
+                // Add the remove player button
+                Button removePlayerButton = createRemovePlayerButton(playerBuilder.getId());
+                playerListingHBox.getChildren().add(removePlayerButton);
+
+                // Add the color picker
+                Node colorPicker = createPlayerColorPicker(playerBuilder);
+                playerListingHBox.getChildren().add(colorPicker);
+
+                // Add the bot or player selector
+                Node botOrPlayerSelector = createBotOrPlayerSelector(playerBuilder);
+                playerListingHBox.getChildren().add(botOrPlayerSelector);
+
                 playerListingHBox.getChildren().addAll(
                     playerNameTextField
                 );
                 playerListVBox.getChildren().add(playerListingHBox);
             }
         });
+
+        // Add the add player button
+        Node addPlayerButton = createAddPlayerButton();
+        mainBox.getChildren().add(addPlayerButton);
 
         final Button startGameButton = new Button("Start Game");
         final Label startGameErrorLabel = new Label();
@@ -98,7 +115,7 @@ public class CreateGameBuilder extends MenuBuilder {
      */
     @StudentImplementationRequired("H3.4")
     private Node createAddPlayerButton() {
-        // TODO: H3.4
+        // H3.4
         Button addPlayerButton = new Button("Add Player");
         addPlayerButton.setOnAction(e -> {
             PlayerImpl.Builder newPlayerBuilder = nextPlayerBuilder();
@@ -117,7 +134,7 @@ public class CreateGameBuilder extends MenuBuilder {
      */
     @StudentImplementationRequired("H3.4")
     private Node createPlayerColorPicker(final Builder playerBuilder) {
-        // TODO: H3.4
+        // H3.4
         ColorPicker colorPicker = new ColorPicker();
         colorPicker.setOnAction(e -> {
             Color newColor = colorPicker.getValue();
@@ -143,7 +160,7 @@ public class CreateGameBuilder extends MenuBuilder {
      */
     @StudentImplementationRequired("H3.4")
     private Node createBotOrPlayerSelector(final Builder playerBuilder) {
-        // TODO: H3.4
+        // H3.4
         CheckBox botCheckBox = new CheckBox("Is AI?");
         botCheckBox.setSelected(playerBuilder.isAi());
         botCheckBox.setOnAction(e -> playerBuilder.ai(botCheckBox.isSelected()));
@@ -158,7 +175,7 @@ public class CreateGameBuilder extends MenuBuilder {
      */
     @StudentImplementationRequired("H3.4")
     private Button createRemovePlayerButton(final int id) {
-        // TODO: H3.4
+        // H3.4
         Button removePlayerButton = new Button("Remove Player");
         removePlayerButton.setOnAction(e -> removePlayer(id));
         return removePlayerButton;
@@ -172,7 +189,7 @@ public class CreateGameBuilder extends MenuBuilder {
      */
     @StudentImplementationRequired("H3.4")
     private void removePlayer(final int id) {
-        // TODO: H3.4
+        // H3.4
         observablePlayers.removeIf(playerBuilder -> playerBuilder.getId() == id);
         int newId = 1;
         for (PlayerImpl.Builder playerBuilder : observablePlayers) {
