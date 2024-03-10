@@ -167,6 +167,9 @@ public class PlayerActionsController implements Controller {
                 builder.enableRollDiceButton();
                 break;
 
+            case DROP_CARDS:
+                selectResources(PlayerState.class.cast(getPlayerState()).cardsToSelect());
+                break;
         }
     }
 
