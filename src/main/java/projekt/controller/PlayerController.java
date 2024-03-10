@@ -353,7 +353,7 @@ public class    PlayerController {
     @StudentImplementationRequired("H2.4")
     public void buildVillage(final Intersection intersection) throws IllegalActionException {
         if (!canBuildVillage()) throw new IllegalActionException("Cannot build Village.");
-        if(!intersection.placeVillage(player, !isFirstRound())) throw new IllegalActionException("Cannot build the Village");
+        if(!intersection.placeVillage(player, isFirstRound())) throw new IllegalActionException("Cannot build the Village");
         if (playerObjectiveProperty.getValue() != PlayerObjective.PLACE_VILLAGE)
             player.removeResources(Config.SETTLEMENT_BUILDING_COST.get(Settlement.Type.VILLAGE));
     }

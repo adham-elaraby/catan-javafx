@@ -124,9 +124,18 @@ public class PlayerActionsController implements Controller {
         builder.disableAllButtons();
         updatePlayerInformation();
 
+
         if (getPlayerController().getPlayer().isAi()) {
             return;
         }
+
+        updateBuildVillageButtonState();
+        updateUpgradeVillageButtonState();
+        updateBuildRoadButtonState();
+//        builder.enableRollDiceButton();
+        builder.enableTradeButton();
+//        builder.enableAbortButton();
+        builder.enableEndTurnButton();
 
         switch (objective) {
             // selectRobberTileAction
@@ -149,6 +158,15 @@ public class PlayerActionsController implements Controller {
             case ACCEPT_TRADE:
                 acceptTradeOffer();
                 break;
+
+            case PLACE_VILLAGE:
+                updateBuildVillageButtonState();
+                break;
+
+            case DICE_ROLL:
+                builder.enableRollDiceButton();
+                break;
+
         }
     }
 
@@ -355,8 +373,8 @@ public class PlayerActionsController implements Controller {
     @StudentImplementationRequired("H3.1")
     private void updateBuildRoadButtonState() {
         if (getPlayerObjective().getAllowedActions().contains(BuildRoadAction.class) && !playerStateProperty.getValue().buildableRoadEdges().isEmpty()) {
-            builder.enableBuildVillageButton();
-        } else builder.disableBuildVillageButton();
+            builder.enableBuildRoadButton();
+        } else builder.disableBuildRoadButton();
     }
 
     /**
