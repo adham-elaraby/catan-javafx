@@ -1,5 +1,6 @@
 package projekt.controller.gui;
 
+import com.sun.media.jfxmedia.events.PlayerStateEvent;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -116,8 +117,39 @@ public class PlayerActionsController implements Controller {
      */
     @StudentImplementationRequired("H3.2")
     private void updateUIBasedOnObjective(final PlayerObjective objective) {
-        // TODO: H3.2
-        org.tudalgo.algoutils.student.Student.crash("H3.2 - Remove if implemented");
+        // H3.2
+        removeAllHighlights();
+        drawIntersections();
+        drawEdges();
+        builder.disableAllButtons();
+        updatePlayerInformation();
+
+        if (getPlayerController().getPlayer().isAi()) {
+            return;
+        }
+
+        switch (objective) {
+            // selectRobberTileAction
+            case SELECT_ROBBER_TILE:
+                getHexGridController().highlightTiles(this::selectRobberTileAction);
+                break;
+            // selectCardToStealAction
+            case SELECT_CARD_TO_STEAL:
+                selectCardToStealAction();
+                break;
+            // selectResources, expects a parameter int amountToSelect
+            // From the PDF: Außerdem werden, über den PlayerState, einige
+            //sonstige Informationen übermittelt, wie zum Beispiel, welche Kreuzungen und Kanten aktuell bebaut werden können
+            //oder wie viele Karten der Spieler auswählen soll.
+            case SELECT_CARDS:
+                selectResources(PlayerState.class.cast(getPlayerState()).cardsToSelect());
+                break;
+
+            // acceptTradeOffer
+            case ACCEPT_TRADE:
+                acceptTradeOffer();
+                break;
+        }
     }
 
     /**
