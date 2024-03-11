@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -324,34 +325,43 @@ public class GameController {
     ) {
         // Iterate over all players
         for (PlayerController playerController : playerControllers.values()) {
+            AtomicBoolean tradeAccepted = new AtomicBoolean(false);
             Player player = playerController.getPlayer();
+
+            if (tradeAccepted.get()) {
+                // Set the active player back to the offering player
+//                activePlayerControllerProperty.setValue(playerControllers.get(offeringPlayer));
+                setActivePlayerControllerProperty(offeringPlayer);
+
+                return;
+            }
 
             // Check if the player can accept the trade
             if (playerController.canAcceptTradeOffer(offeringPlayer, request)) {
                 // Set the trade offer for the player
                 playerController.setPlayerTradeOffer(offeringPlayer, offer, request);
 
-                // Wait for the player's action
-                PlayerAction action = playerController.waitForNextAction(PlayerObjective.ACCEPT_TRADE);
+                // Set the active player to the player who is deciding on the trade
+                withActivePlayer(playerController, () -> {
+                    // Wait for the player's action
+                    PlayerAction action = playerController.waitForNextAction(PlayerObjective.ACCEPT_TRADE);
 
-                // Check if the action is an instance of AcceptTradeAction
-                if (action instanceof AcceptTradeAction) {
                     // Get the accepted status from the record
                     boolean accepted = ((AcceptTradeAction) action).accepted();
 
-                    // If the trade is accepted, execute the trade....
+                    // If the trade is accepted, end the loop
                     if (accepted) {
-                        offeringPlayer.removeResources(offer);
-                        player.addResources(offer);
-                        player.removeResources(request);
-                        offeringPlayer.addResources(request);
-                    }
-                    // Set the player's objective to IDLE after processing the action
-                    playerController.setPlayerObjective(PlayerObjective.IDLE);
-                }
+                        // reset the trade offer for the player
+                        playerController.resetPlayerTradeOffer();
 
-                // Reset the trade offer for the player
-                playerController.resetPlayerTradeOffer();
+                        // Stop offering the trade to other players
+                        tradeAccepted.set(true);
+                        return;
+                    }
+
+                    // Reset the trade offer for the player
+                    playerController.resetPlayerTradeOffer();
+                });
             }
         }
     }
