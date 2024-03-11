@@ -140,6 +140,7 @@ public class PlayerActionsController implements Controller {
         switch (objective) {
             // selectRobberTileAction
             case SELECT_ROBBER_TILE:
+                builder.disableEndTurnButton();
                 getHexGridController().highlightTiles(this::selectRobberTileAction);
                 break;
             // selectCardToStealAction
@@ -165,6 +166,7 @@ public class PlayerActionsController implements Controller {
 
             case DICE_ROLL:
                 builder.enableRollDiceButton();
+                builder.disableTradeButton();
                 break;
 
             case DROP_CARDS:
