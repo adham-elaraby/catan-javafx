@@ -268,6 +268,10 @@ public class HexGridImpl implements HexGrid {
     ) {
         Edge edge = getEdge(position0, position1);
 
+        if (edge == null) {
+            throw new IllegalArgumentException("Edge does not exist");
+        }
+
         // Check if a road already exists
         if (edge.getRoadOwner() != null) {
             return false;
