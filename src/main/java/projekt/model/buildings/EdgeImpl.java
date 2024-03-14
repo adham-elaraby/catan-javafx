@@ -90,15 +90,11 @@ public record EdgeImpl(
     @StudentImplementationRequired("H1.3")
     public Set<Edge> getConnectedRoads(final Player player) {
         // H1.3
-        // Get intersections connected by this edge
-        Set<Intersection> intersections = getIntersections();
-        // Find all edges that are connected to the intersections of this edge and are owned by the player
-        return grid.getEdges().values().stream()
-            .filter(edge ->
-                edge.getRoadOwnerProperty().getValue() == player &&
-                    intersections.stream().anyMatch(intersection ->
-                        intersection.getAdjacentTilePositions().contains(edge.getPosition1()) ||
-                            intersection.getAdjacentIntersections().contains(edge.getPosition2())))
+        // Get edges connected by this edge
+        Set<Edge> connectedEdges = getConnectedEdges();
+        // Find all edges that are connected to this edge and are owned by the player
+        return connectedEdges.stream()
+            .filter(edge -> edge.getRoadOwnerProperty().getValue() == player)
             .collect(Collectors.toSet());
     }
 }
