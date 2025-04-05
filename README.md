@@ -1,4 +1,4 @@
-# FOP-Projekt (Archive)
+# Catan Board Game  (Archive)
 
 Implementation of the popular board game "Catan" as part of a Voulountary Programming Project for the TU Darmstadt Informatik course. This project showcases advanced Java programming techniques, Design Patterns, and utilizes JavaFX for the user interface.
 
