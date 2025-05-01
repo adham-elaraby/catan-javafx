@@ -1,6 +1,6 @@
 # Catan Board Game  (Archive)
 
-Implementation of the popular board game "Catan" as part of a Voulountary Programming Project for the TU Darmstadt Informatik course. This project showcases advanced Java programming techniques, Design Patterns, and utilizes JavaFX for the user interface.
+Implementation of the popular board game "Catan" as part of a voluntary Programming Project for the TU Darmstadt Informatik course. This project showcases advanced Java programming techniques, Design Patterns, and utilizes JavaFX for the user interface.
 
 ## Table of Contents
 - [Screenshots](#screenshots)
@@ -15,6 +15,9 @@ Implementation of the popular board game "Catan" as part of a Voulountary Progra
 ![Menu](https://github.com/user-attachments/assets/4016f43a-7133-46bb-9502-5fc3b2e486b4)           |  ![Build-Road](https://github.com/user-attachments/assets/fab90630-f017-4e6d-be19-eb4ad0908a6f)
 :-------------------------:|:-------------------------:
 ![Start-Game](https://github.com/user-attachments/assets/3e2d9e8d-c9ba-42c7-979a-acf3a1c955d9)  |  ![Trade](https://github.com/user-attachments/assets/2c9ec8dc-367d-4189-9c8f-18344c149ec3)
+
+## Contributors
+Maria Grigoryan, Valentina Karapetyan, Pavel AndreenKo
 
 ## Introduction
 This repository contains the digital implementation of the popular board game "Catan". The project is designed to provide a rich graphical and interactive experience, allowing users to play the game as they would in a physical setting.
